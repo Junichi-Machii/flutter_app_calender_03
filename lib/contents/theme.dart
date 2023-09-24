@@ -34,3 +34,12 @@ TextStyle get headingStyle {
           fontWeight: FontWeight.bold,
           color: Get.isDarkMode ? Colors.white : Colors.black));
 }
+
+TextStyle get dateTimeStyle {
+  return GoogleFonts.lato(
+      textStyle: TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+    color: ThemeColors.grey,
+  ));
+}

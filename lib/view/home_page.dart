@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+
+//packages
+import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:flutter_clendar_app03/contents/color.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+
 import 'package:flutter_clendar_app03/contents/theme.dart';
 import 'package:flutter_clendar_app03/services/notification_services.dart';
 import 'package:flutter_clendar_app03/services/theme_services.dart';
 import 'package:flutter_clendar_app03/ui/widgets/button.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,6 +20,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  DateTime _selectedDateTime = DateTime.now();
   var notifyHelper;
 
   @override
@@ -31,13 +38,46 @@ class _HomePageState extends State<HomePage> {
       appBar: _appbar(),
       body: Column(
         children: [
-          _appTaskBar(),
+          _addTaskBar(),
+          _addDateBar(),
         ],
       ),
     );
   }
 
-  _appTaskBar() {
+  _addDateBar() {
+    return Container(
+      margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
+      child: DatePicker(
+        DateTime.now(),
+        height: 100,
+        width: 80,
+        initialSelectedDate: DateTime.now(),
+        selectionColor: ThemeColors.primaryClr,
+        selectedTextColor: ThemeColors.white,
+        dateTextStyle: dateTimeStyle,
+        dayTextStyle: GoogleFonts.lato(
+          textStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: ThemeColors.grey,
+          ),
+        ),
+        monthTextStyle: GoogleFonts.lato(
+          textStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: ThemeColors.grey,
+          ),
+        ),
+        onDateChange: (date) {
+          _selectedDateTime = date;
+        },
+      ),
+    );
+  }
+
+  _addTaskBar() {
     return Container(
       margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
       child: Row(
