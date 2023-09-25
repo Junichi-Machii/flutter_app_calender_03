@@ -21,6 +21,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   int _selectedRemind = 5;
   String _selectedRepeat = "None";
+  int _selectedColor = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,6 +141,50 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     );
                   }).toList(),
                 ),
+              ),
+              SizedBox(height: 18),
+              Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Color",
+                        style: titleStyle,
+                      ),
+                      SizedBox(height: 8.0),
+                      Wrap(
+                        children: List<Widget>.generate(3, (int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedColor = index;
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: (CircleAvatar(
+                                radius: 14,
+                                backgroundColor: index == 0
+                                    ? ThemeColors.primaryClr
+                                    : index == 1
+                                        ? ThemeColors.pinkClr
+                                        : ThemeColors.yellowClr,
+                                child: _selectedColor == index
+                                    ? Icon(
+                                        Icons.done,
+                                        color: ThemeColors.white,
+                                        size: 16,
+                                      )
+                                    : Container(),
+                              )),
+                            ),
+                          );
+                        }),
+                      )
+                    ],
+                  )
+                ],
               )
             ],
           ),
