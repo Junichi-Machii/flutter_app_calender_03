@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 //packages
 import 'package:date_picker_timeline/date_picker_widget.dart';
-import 'package:flutter_clendar_app03/contents/color.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 
+import 'package:flutter_clendar_app03/ui/widgets/add_task_bar.dart';
+import 'package:flutter_clendar_app03/contents/color.dart';
 import 'package:flutter_clendar_app03/contents/theme.dart';
 import 'package:flutter_clendar_app03/services/notification_services.dart';
 import 'package:flutter_clendar_app03/services/theme_services.dart';
@@ -98,7 +99,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          MyButton(label: '+ Add Task', onTap: () {}),
+          MyButton(label: '+ Add Task', onTap: () => Get.to(AddTaskPage())),
           // SizedBox(width: 20),
         ],
       ),
