@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clendar_app03/contents/color.dart';
 import 'package:flutter_clendar_app03/contents/theme.dart';
+import 'package:flutter_clendar_app03/data/list_date.dart';
 import 'package:flutter_clendar_app03/ui/widgets/input_field.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -18,6 +19,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   // TimeOfDay _selectedTime = TimeOfDay.now();
   String _endTime = "9:30 PM";
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
+  int _selectedRemind = 5;
+  String _selectedRepeat = "None";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,64 +29,121 @@ class _AddTaskPageState extends State<AddTaskPage> {
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(
-            child: Column(
-          children: [
-            Text(
-              "Add Task",
-              style: headingStyle,
-            ),
-            MyInputField(hintText: "Enter Your Title", title: "Title"),
-            MyInputField(hintText: "Enter Your Note", title: "Note"),
-            MyInputField(
-              hintText: DateFormat.yMd().format(_selectedDate),
-              title: "Date",
-              widget: IconButton(
-                onPressed: () {
-                  _getDateFromUser(context: context);
-                },
-                icon: Icon(
-                  Icons.calendar_today_outlined,
-                  color: ThemeColors.grey,
+          child: Column(
+            children: [
+              Text(
+                "Add Task",
+                style: headingStyle,
+              ),
+              MyInputField(hintText: "Enter Your Title", title: "Title"),
+              MyInputField(hintText: "Enter Your Note", title: "Note"),
+              MyInputField(
+                hintText: DateFormat.yMd().format(_selectedDate),
+                title: "Date",
+                widget: IconButton(
+                  onPressed: () {
+                    _getDateFromUser(context: context);
+                  },
+                  icon: Icon(
+                    Icons.calendar_today_outlined,
+                    color: ThemeColors.grey,
+                  ),
                 ),
               ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: MyInputField(
-                    hintText: _startTime,
-                    title: "Start Time",
-                    widget: IconButton(
-                      onPressed: () {
-                        _getTimeFromUser(isStartTime: true);
-                      },
-                      icon: Icon(
-                        Icons.access_time_sharp,
-                        color: ThemeColors.grey,
+              Row(
+                children: [
+                  Expanded(
+                    child: MyInputField(
+                      hintText: _startTime,
+                      title: "Start Time",
+                      widget: IconButton(
+                        onPressed: () {
+                          _getTimeFromUser(isStartTime: true);
+                        },
+                        icon: Icon(
+                          Icons.access_time_sharp,
+                          color: ThemeColors.grey,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(width: 8),
-                Expanded(
-                  child: MyInputField(
-                    hintText: _endTime,
-                    title: "End Time",
-                    widget: IconButton(
-                      onPressed: () {
-                        _getTimeFromUser(isStartTime: false);
-                      },
-                      icon: Icon(
-                        Icons.access_time_sharp,
-                        color: ThemeColors.grey,
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: MyInputField(
+                      hintText: _endTime,
+                      title: "End Time",
+                      widget: IconButton(
+                        onPressed: () {
+                          _getTimeFromUser(isStartTime: false);
+                        },
+                        icon: Icon(
+                          Icons.access_time_sharp,
+                          color: ThemeColors.grey,
+                        ),
                       ),
                     ),
                   ),
+                ],
+              ),
+              MyInputField(
+                hintText: "$_selectedRemind minutes early",
+                title: "Remind",
+                widget: DropdownButton(
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedRemind = int.parse(newValue!);
+                    });
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: ThemeColors.grey,
+                  ),
+                  iconSize: 32,
+                  elevation: 4,
+                  style: subTitleStyle,
+                  underline: Container(height: 0),
+                  items: remindList.map<DropdownMenuItem<String>>((int value) {
+                    return DropdownMenuItem<String>(
+                      value: value.toString(),
+                      child: Text(value.toString()),
+                    );
+                  }).toList(),
                 ),
-              ],
-            ),
-          ],
-        )),
+              ),
+              MyInputField(
+                hintText: _selectedRepeat,
+                title: "Repeat",
+                widget: DropdownButton(
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _selectedRepeat = newValue!;
+                    });
+                  },
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: ThemeColors.grey,
+                  ),
+                  iconSize: 32,
+                  elevation: 4,
+                  style: subTitleStyle,
+                  underline: Container(height: 0),
+                  items:
+                      repeatList.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          color: ThemeColors.grey,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
