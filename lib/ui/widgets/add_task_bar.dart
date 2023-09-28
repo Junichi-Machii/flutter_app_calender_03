@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clendar_app03/contents/color.dart';
 import 'package:flutter_clendar_app03/contents/theme.dart';
 import 'package:flutter_clendar_app03/data/list_date.dart';
+import 'package:flutter_clendar_app03/ui/widgets/button.dart';
 import 'package:flutter_clendar_app03/ui/widgets/input_field.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 
 class AddTaskPage extends StatefulWidget {
@@ -15,6 +15,8 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
   // TimeOfDay _selectedTime = TimeOfDay.now();
   String _endTime = "9:30 PM";
@@ -26,7 +28,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
-      appBar: _appbar(context),
+      appBar: _appBar(context),
       body: Container(
         padding: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(
@@ -36,8 +38,16 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 "Add Task",
                 style: headingStyle,
               ),
-              MyInputField(hintText: "Enter Your Title", title: "Title"),
-              MyInputField(hintText: "Enter Your Note", title: "Note"),
+              MyInputField(
+                hintText: "Enter Your Title",
+                title: "Title",
+                controller: _titleController,
+              ),
+              MyInputField(
+                hintText: "Enter Your Note",
+                title: "Note",
+                controller: _noteController,
+              ),
               MyInputField(
                 hintText: DateFormat.yMd().format(_selectedDate),
                 title: "Date",
@@ -142,48 +152,17 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   }).toList(),
                 ),
               ),
-              SizedBox(height: 18),
+              const SizedBox(height: 16),
+              // colors choices
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Color",
-                        style: titleStyle,
-                      ),
-                      SizedBox(height: 8.0),
-                      Wrap(
-                        children: List<Widget>.generate(3, (int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _selectedColor = index;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 8.0),
-                              child: (CircleAvatar(
-                                radius: 14,
-                                backgroundColor: index == 0
-                                    ? ThemeColors.primaryClr
-                                    : index == 1
-                                        ? ThemeColors.pinkClr
-                                        : ThemeColors.yellowClr,
-                                child: _selectedColor == index
-                                    ? Icon(
-                                        Icons.done,
-                                        color: ThemeColors.white,
-                                        size: 16,
-                                      )
-                                    : Container(),
-                              )),
-                            ),
-                          );
-                        }),
-                      )
-                    ],
-                  )
+                  _colorPallete(),
+                  MyButton(
+                      onTap: () {
+                        _validateDate();
+                      },
+                      label: "Create Task"),
                 ],
               )
             ],
@@ -193,7 +172,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     );
   }
 
-  _appbar(BuildContext context) {
+  _appBar(BuildContext context) {
     return AppBar(
       elevation: 0,
       backgroundColor: context.theme.appBarTheme.backgroundColor,
@@ -216,6 +195,24 @@ class _AddTaskPageState extends State<AddTaskPage> {
         SizedBox(width: 20),
       ],
     );
+  }
+
+  _validateDate() {
+    if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
+      //add date base
+      Get.back();
+    } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
+      Get.snackbar(
+        'Required',
+        'All fields are required ',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Get.isDarkMode ? Colors.grey : Colors.grey[300],
+        icon: Icon(
+          Icons.warning_amber_rounded,
+          color: Colors.red[900],
+        ),
+      );
+    }
   }
 
   _getDateFromUser({required BuildContext context}) async {
@@ -259,6 +256,48 @@ class _AddTaskPageState extends State<AddTaskPage> {
         hour: int.parse(_startTime.split(":")[0]),
         minute: int.parse(_startTime.split(":")[1].split(" ")[0]),
       ),
+    );
+  }
+
+  _colorPallete() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Color",
+          style: titleStyle,
+        ),
+        const SizedBox(height: 8.0),
+        Wrap(
+          children: List<Widget>.generate(3, (int index) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  _selectedColor = index;
+                });
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: (CircleAvatar(
+                  radius: 14,
+                  backgroundColor: index == 0
+                      ? ThemeColors.primaryClr
+                      : index == 1
+                          ? ThemeColors.pinkClr
+                          : ThemeColors.yellowClr,
+                  child: _selectedColor == index
+                      ? Icon(
+                          Icons.done,
+                          color: ThemeColors.white,
+                          size: 16,
+                        )
+                      : Container(),
+                )),
+              ),
+            );
+          }),
+        )
+      ],
     );
   }
 }

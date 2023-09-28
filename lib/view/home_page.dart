@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
+      appBar: _appBar(),
       body: Column(
         children: [
           _addTaskBar(),
@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _appbar() {
+  _appBar() {
     return AppBar(
       elevation: 0,
       backgroundColor: context.theme.appBarTheme.backgroundColor,
@@ -125,7 +125,8 @@ class _HomePageState extends State<HomePage> {
         child: Icon(
           Get.isDarkMode ? Icons.sunny : Icons.dark_mode_rounded,
           size: 20,
-          color: Get.isDarkMode ? Colors.white : Colors.black87,
+          color:
+              Get.isDarkMode ? Colors.amber.shade900 : Colors.yellow.shade700,
         ),
       ),
       actions: [
