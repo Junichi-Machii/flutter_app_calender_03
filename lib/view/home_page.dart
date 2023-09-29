@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 //packages
 import 'package:date_picker_timeline/date_picker_widget.dart';
+import 'package:flutter_clendar_app03/controllers/task_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   DateTime _selectedDateTime = DateTime.now();
+  final _taskController = Get.put(TaskController());
   var notifyHelper;
 
   @override
@@ -41,6 +43,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           _addTaskBar(),
           _addDateBar(),
+          SizedBox(height: 10),
+          _showTasks(),
         ],
       ),
     );
@@ -100,7 +104,14 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           MyButton(
-              label: '+ Add Task', onTap: () => Get.to(() => AddTaskPage())),
+            label: '+ Add Task',
+            onTap: () async {
+              await Get.to(
+                () => AddTaskPage(),
+              );
+              _taskController.getTasks();
+            },
+          ),
           // SizedBox(width: 20),
         ],
       ),
@@ -138,6 +149,31 @@ class _HomePageState extends State<HomePage> {
         ),
         SizedBox(width: 20),
       ],
+    );
+  }
+
+  _showTasks() {
+    return Expanded(
+      child: Obx(
+        () {
+          return ListView.builder(
+            itemCount: _taskController.taskList.length,
+            itemBuilder: (_, index) {
+              print(_taskController.taskList.length);
+
+              return Container(
+                width: 100,
+                height: 50,
+                color: Colors.lightGreen,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  _taskController.taskList[index].title.toString(),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
