@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clendar_app03/contents/color.dart';
 import 'package:flutter_clendar_app03/contents/theme.dart';
+import 'package:flutter_clendar_app03/controllers/task_controller.dart';
 import 'package:flutter_clendar_app03/data/list_date.dart';
+import 'package:flutter_clendar_app03/data/models/task_model.dart';
 import 'package:flutter_clendar_app03/ui/widgets/button.dart';
 import 'package:flutter_clendar_app03/ui/widgets/input_field.dart';
 import 'package:get/get.dart';
@@ -15,6 +17,7 @@ class AddTaskPage extends StatefulWidget {
 }
 
 class _AddTaskPageState extends State<AddTaskPage> {
+  final TaskController _taskController = Get.put(TaskController());
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
@@ -199,7 +202,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   _validateDate() {
     if (_titleController.text.isNotEmpty && _noteController.text.isNotEmpty) {
-      //add date base
+      _addTaskToDb();
       Get.back();
     } else if (_titleController.text.isEmpty || _noteController.text.isEmpty) {
       Get.snackbar(
@@ -299,5 +302,22 @@ class _AddTaskPageState extends State<AddTaskPage> {
         )
       ],
     );
+  }
+
+  Future<void> _addTaskToDb() async {
+    int value = await _taskController.addTask(
+      task: Task(
+        note: _noteController.text,
+        title: _titleController.text,
+        date: DateFormat.yMd().format(_selectedDate),
+        startTime: _startTime,
+        endTime: _endTime,
+        remind: _selectedRemind,
+        repeat: _selectedRepeat,
+        color: _selectedColor,
+        isCompleted: 0,
+      ),
+    );
+    print("My id is  $value");
   }
 }
